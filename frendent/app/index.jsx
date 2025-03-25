@@ -6,14 +6,11 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.title}>Hello</Text>
 
-      <Text>
-        <Link href="/(auth)/signup">Signup Page</Link>
-      </Text>
-      <Text>
-        <Link href="/(auth)">Login Page</Link>
-      </Text>
-    </View>
-  );
+      <Link href="/signup">Signup Page</Link> 
+      <Link href="/login">Login Page</Link> 
+    </View> 
+
+  ); 
 }
 
 const styles = StyleSheet.create({
