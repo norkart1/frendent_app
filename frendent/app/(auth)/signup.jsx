@@ -12,16 +12,24 @@ import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import styles from "../../assets/styles/signup.styles";
 import COLORS from "../../constants/colors"; // Import COLORS if it's a custom theme
 import { useState } from "react";
+import { useRouter } from "expo-router";
+import { useAuthStore } from "../../store/authStore";
+
 
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const {user, isLoading, register} = useAuthStore();
 
-  const handleSignup = () => {
-    // Implement signup functionality here
+
+
+  const router = useRouter();
+
+  const handleSignup = async() => {
+      const result = await register(username, email, password);
+    if(!result.success ) Alart.alert("Error", result.error);
   };
 
   return (
@@ -111,6 +119,26 @@ export default function Signup() {
                     size={20}
                     color={COLORS.primary}
                   />
+                </TouchableOpacity>
+              </View>
+
+              {/* SIGNUP BUTTON*/}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSignup}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>Sign up</Text>
+                )}
+              </TouchableOpacity>
+              {/* FOOTER */}
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Already have an account?</Text>
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Text style={styles.link}>Login</Text>
                 </TouchableOpacity>
               </View>
             </View>
