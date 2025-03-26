@@ -29,10 +29,10 @@ export const useAuthStore = create((set) => ({
       await AsyncStorage.setItem("user", JSON.stringify(data.user));
       await AsyncStorage.setItem("token", data.token);
       set({ token: data.token, user: data.user, isLoading: false });
-      return { success:true };
+      return { success: true };
     } catch (error) {
-      set({ isLoading: false});
-      return { success:false, error:error.message };
+      set({ isLoading: false });
+      return { success: false, error: error.message };
     }
   },
 }));
