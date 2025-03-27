@@ -7,7 +7,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Alert
+  
 } from "react-native";
+
+
+
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import styles from "../../assets/styles/signup.styles";
 import COLORS from "../../constants/colors"; // Import COLORS if it's a custom theme
@@ -29,7 +34,7 @@ const {user, isLoading, register} = useAuthStore();
 
   const handleSignup = async() => {
       const result = await register(username, email, password);
-    if(!result.success ) Alart.alert("Error", result.error);
+    if(!result.success ) Alert.alert("Error", result.error);
   };
 
   return (

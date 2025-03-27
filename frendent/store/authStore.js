@@ -12,7 +12,7 @@ export const useAuthStore = create((set) => ({
       const response = await fetch(
         "https://backend2-1-9wxt.onrender.com/api/auth/register",
         {
-          methos: "POST",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
