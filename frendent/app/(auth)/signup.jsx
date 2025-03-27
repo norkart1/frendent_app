@@ -8,11 +8,7 @@ import {
   ScrollView,
   Platform,
   Alert
-  
 } from "react-native";
-
-
-
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import styles from "../../assets/styles/signup.styles";
 import COLORS from "../../constants/colors"; // Import COLORS if it's a custom theme
