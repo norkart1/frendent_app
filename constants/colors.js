@@ -1,16 +1,20 @@
-// FOREST
+// MODERN BLUE & GREEN
 const COLORS = {
-  primary: "#4CAF50",
-  textPrimary: "#2e5a2e",
-  textSecondary: "#688f68",
-  textDark: "#1b361b",
-  placeholderText: "#767676",
-  background: "#e8f5e9",
-  cardBackground: "#f1f8f2",
-  inputBackground: "#f4faf5",
-  border: "#c8e6c9",
+  primary: "#2563EB",
+  primaryLight: "#3B82F6",
+  secondary: "#10B981",
+  textPrimary: "#1F2937",
+  textSecondary: "#6B7280",
+  textDark: "#111827",
+  placeholderText: "#9CA3AF",
+  background: "#F3F4F6",
+  cardBackground: "#FFFFFF",
+  inputBackground: "#F9FAFB",
+  border: "#E5E7EB",
   white: "#ffffff",
   black: "#000000",
+  success: "#10B981",
+  successLight: "#D1FAE5",
 };
 
 // RETRO
