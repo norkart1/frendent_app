@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Meme Jdsa Students Bank",
-    "slug": "meme-jdsa-students-bank",
+    "name": "Dikhr and Dua",
+    "slug": "dikhr-and-dua",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nork.memejdsastudentsbank"
+      "package": "com.nork.dikhranddua"
     },
     "web": {
       "bundler": "metro",
