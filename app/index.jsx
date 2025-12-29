@@ -1,18 +1,18 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import COLORS from "../constants/colors";
 
 export default function Index() {
   const prayerFeatures = [
-    { name: "Kalma", icon: "hand-right" },
+    { name: "Kalma", icon: "script-text-outline" },
     { name: "Al Qur'an", icon: "book-open-variant" },
     { name: "Al Hadith", icon: "book-open-page-variant" },
-    { name: "Asma Ul Husna", icon: "allah", },
+    { name: "Asma Ul Husna", icon: "star-crescent", },
     { name: "Tasbih", icon: "circle-multiple" },
     { name: "Qibla Compass", icon: "compass" },
     { name: "Siyam Timing", icon: "moon-waning-crescent" },
-    { name: "Dua for everyday", icon: "hands-together" },
-    { name: "Hajj & Umrah", icon: "kaaba" },
+    { name: "Dua for everyday", icon: "hands-pray" },
+    { name: "Hajj & Umrah", icon: "kaaba", useFA5: true },
   ];
 
   return (
@@ -51,7 +51,7 @@ export default function Index() {
 
             {/* Mosque Silhouette */}
             <View style={styles.mosqueSilhouette}>
-              <MaterialCommunityIcons name="kaaba" size={60} color={COLORS.primaryLight} opacity={0.3} />
+              <FontAwesome5 name="kaaba" size={60} color={COLORS.primaryLight} style={{ opacity: 0.3 }} />
             </View>
           </View>
         </View>
@@ -62,11 +62,19 @@ export default function Index() {
             {prayerFeatures.map((feature, index) => (
               <TouchableOpacity key={index} style={styles.featureItem}>
                 <View style={styles.featureIconBox}>
-                  <MaterialCommunityIcons 
-                    name={feature.icon} 
-                    size={28} 
-                    color={COLORS.primaryLight} 
-                  />
+                  {feature.useFA5 ? (
+                    <FontAwesome5 
+                      name={feature.icon} 
+                      size={24} 
+                      color={COLORS.primaryLight} 
+                    />
+                  ) : (
+                    <MaterialCommunityIcons 
+                      name={feature.icon} 
+                      size={28} 
+                      color={COLORS.primaryLight} 
+                    />
+                  )}
                 </View>
                 <Text style={styles.featureLabel}>{feature.name}</Text>
               </TouchableOpacity>
@@ -87,7 +95,7 @@ export default function Index() {
           <MaterialCommunityIcons name="home" size={24} color={COLORS.primaryLight} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <MaterialCommunityIcons name="prayer-times" size={24} color="#999" />
+          <MaterialCommunityIcons name="clock-outline" size={24} color="#999" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <MaterialCommunityIcons name="compass" size={24} color="#999" />
