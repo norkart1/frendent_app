@@ -1,8 +1,81 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import * as Location from "expo-location";
+import { Coordinates, CalculationMethod, PrayerTimes } from "adhan";
 import COLORS from "../constants/colors";
 
 export default function Index() {
+  const router = useRouter();
+  const [prayerTimes, setPrayerTimes] = useState(null);
+  const [locationName, setLocationName] = useState("Sylhet");
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        updatePrayerTimes(24.8949, 91.8687); // Default to Sylhet
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      updatePrayerTimes(location.coords.latitude, location.coords.longitude);
+      
+      let reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      });
+      if (reverseGeocode.length > 0) {
+        setLocationName(reverseGeocode[0].city || reverseGeocode[0].region || "Your Location");
+      }
+    })();
+  }, []);
+
+  const updatePrayerTimes = (lat, lon) => {
+    const coords = new Coordinates(lat, lon);
+    const params = CalculationMethod.IslamicSocietyOfNorthAmerica();
+    const times = new PrayerTimes(coords, new Date(), params);
+    setPrayerTimes(times);
+  };
+
+  const formatTime = (time) => {
+    if (!time) return "--:--";
+    return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  };
+
+  const getNextPrayer = () => {
+    if (!prayerTimes) return { name: "LOADING...", start: null, end: null };
+    const next = prayerTimes.nextPrayer();
+    const current = prayerTimes.currentPrayer();
+    
+    let prayerName = "ISHA";
+    let startTime = prayerTimes.isha;
+    let endTime = "Night";
+
+    if (current !== 'none') {
+      prayerName = current.toUpperCase();
+      startTime = prayerTimes[current];
+      // Roughly find end time (next prayer)
+      const nextP = prayerTimes.timeForPrayer(prayerTimes.nextPrayer());
+      endTime = nextP ? formatTime(nextP) : "Night";
+    }
+
+    return {
+      name: prayerName,
+      start: formatTime(startTime),
+      end: endTime
+    };
+  };
+
+  const prayerInfo = getNextPrayer();
+
   const prayerFeatures = [
     { name: "Kalma", icon: "script-text-outline" },
     { name: "Al Qur'an", icon: "book-open-variant" },
@@ -22,30 +95,32 @@ export default function Index() {
         <View style={styles.headerSection}>
           {/* Date and Location */}
           <View style={styles.topBar}>
-            <Text style={styles.dateText}>09 Muharram, 1444</Text>
+            <Text style={styles.dateText}>
+              {currentTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+            </Text>
             <View style={styles.locationBadge}>
               <MaterialCommunityIcons name="map-marker" size={16} color={COLORS.primaryLight} />
-              <Text style={styles.locationText}>Sylhet</Text>
+              <Text style={styles.locationText}>{locationName}</Text>
             </View>
           </View>
 
           {/* Prayer Info */}
           <View style={styles.prayerCard}>
-            <Text style={styles.prayerName}>ISHA</Text>
+            <Text style={styles.prayerName}>{prayerInfo.name}</Text>
             <Text style={styles.prayerSubtitle}>Current Prayer</Text>
 
             {/* Prayer Times */}
             <View style={styles.timesContainer}>
               <View style={styles.timeBox}>
                 <Text style={styles.timeLabel}>START</Text>
-                <Text style={styles.timeValue}>07:50 PM</Text>
+                <Text style={styles.timeValue}>{prayerInfo.start}</Text>
               </View>
               <View style={styles.moonIcon}>
                 <MaterialCommunityIcons name="moon-waning-crescent" size={32} color={COLORS.primaryLight} />
               </View>
               <View style={styles.timeBox}>
                 <Text style={styles.timeLabel}>END</Text>
-                <Text style={styles.timeValue}>09:50 PM</Text>
+                <Text style={styles.timeValue}>{prayerInfo.end}</Text>
               </View>
             </View>
 
@@ -60,7 +135,11 @@ export default function Index() {
         <View style={styles.featuresCard}>
           <View style={styles.featureGrid}>
             {prayerFeatures.map((feature, index) => (
-              <TouchableOpacity key={index} style={styles.featureItem}>
+              <TouchableOpacity 
+                key={index} 
+                style={styles.featureItem}
+                onPress={() => feature.name === "Siyam Timing" && router.push('/prayer-timing')}
+              >
                 <View style={styles.featureIconBox}>
                   {feature.useFA5 ? (
                     <FontAwesome5 
@@ -94,7 +173,7 @@ export default function Index() {
         <TouchableOpacity style={styles.navItem}>
           <MaterialCommunityIcons name="home" size={24} color={COLORS.primaryLight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/prayer-timing')}>
           <MaterialCommunityIcons name="clock-outline" size={24} color="#999" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
