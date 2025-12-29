@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "frendent",
-    "slug": "frendent",
+    "name": "Meme Jdsa Students Bank",
+    "slug": "meme-jdsa-students-bank",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nork.frendent"
+      "package": "com.nork.memejdsastudentsbank"
     },
     "web": {
       "bundler": "metro",
