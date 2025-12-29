@@ -6,7 +6,7 @@ export default function Index() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        {/* Blue Hero Section */}
+        {/* Green Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroContent}>
             {/* Illustration */}
@@ -31,16 +31,6 @@ export default function Index() {
             </Link>
           </View>
         </View>
-
-        {/* Login Link */}
-        <View style={styles.loginContainer}>
-          <Text style={styles.loginText}>Already have an account? </Text>
-          <Link href="/(auth)" asChild>
-            <TouchableOpacity>
-              <Text style={styles.loginLink}>Login</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
       </View>
     </ScrollView>
   );
@@ -62,7 +52,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 40,
     paddingHorizontal: 20,
-    minHeight: "85%",
+    minHeight: "100%",
   },
   heroContent: {
     alignItems: "center",
@@ -108,23 +98,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0.3,
-  },
-  loginContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    backgroundColor: COLORS.background,
-  },
-  loginText: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
-  },
-  loginLink: {
-    fontSize: 14,
-    color: COLORS.primaryLight,
-    fontWeight: "700",
-    textDecorationLine: "underline",
   },
 });

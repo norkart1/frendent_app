@@ -1,8 +1,8 @@
-// MODERN BLUE & GREEN
+// MODERN GREEN
 const COLORS = {
-  primary: "#2563EB",
-  primaryLight: "#3B82F6",
-  secondary: "#10B981",
+  primary: "#059669",
+  primaryLight: "#10B981",
+  secondary: "#34D399",
   textPrimary: "#1F2937",
   textSecondary: "#6B7280",
   textDark: "#111827",
