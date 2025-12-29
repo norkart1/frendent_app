@@ -36,7 +36,7 @@ export default function PrayerTiming() {
 
   const fetchPrayerTimes = (lat, lon) => {
     const coords = new Coordinates(lat, lon);
-    const params = CalculationMethod.IslamicSocietyOfNorthAmerica();
+    const params = CalculationMethod.NorthAmerica();
     const times = new PrayerTimes(coords, selectedDate, params);
     const sun = new SunTimes(coords, selectedDate);
     setPrayerTimes(times);

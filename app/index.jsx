@@ -40,7 +40,7 @@ export default function Index() {
 
   const updatePrayerTimes = (lat, lon) => {
     const coords = new Coordinates(lat, lon);
-    const params = CalculationMethod.IslamicSocietyOfNorthAmerica();
+    const params = CalculationMethod.NorthAmerica();
     const times = new PrayerTimes(coords, new Date(), params);
     setPrayerTimes(times);
   };
