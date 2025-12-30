@@ -44,6 +44,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "c1dd7ac2-3e7c-443e-a40a-b724d107cd65"
       }
     },
     "owner": "nork"
