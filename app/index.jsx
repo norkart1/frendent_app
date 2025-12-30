@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert, Modal, ActivityIndicator, Image } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert, Modal, ActivityIndicator } from 'react-native';
 import * as Updates from 'expo-updates';
-import * as SplashScreen from 'expo-splash-screen';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
-SplashScreen.preventAutoHideAsync();
 
 const { width } = Dimensions.get('window');
 const KEYPAD_PADDING = 20;
@@ -18,19 +15,6 @@ const Calculator = () => {
   const [result, setResult] = useState('0');
   const [isCalculated, setIsCalculated] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [appReady, setAppReady] = useState(false);
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      } finally {
-        setAppReady(true);
-        await SplashScreen.hideAsync();
-      }
-    }
-    prepare();
-  }, []);
 
   useEffect(() => {
     async function onFetchUpdateAsync() {
@@ -172,10 +156,6 @@ const Calculator = () => {
     );
   };
 
-  if (!appReady) {
-    return null;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -197,11 +177,7 @@ const Calculator = () => {
         >
           <Ionicons name="menu" size={28} color="#FFFFFF" />
         </TouchableOpacity>
-        <Image 
-          source={require('../assets/images/logo.png')} 
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
+        <Text style={styles.headerTitle}>Calculator</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
@@ -287,9 +263,11 @@ const styles = StyleSheet.create({
   burgerButton: {
     padding: 5,
   },
-  logoImage: {
-    width: 80,
-    height: 80,
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   headerPlaceholder: {
     width: 38,
