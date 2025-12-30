@@ -17,7 +17,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#071624"
       },
-      "package": "com.nork.calculator"
+      "package": "com.nork.calculator",
+      "permissions": [],
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",
@@ -42,7 +44,11 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "79db23d7-144f-4a44-a1be-d4e859a03c3d"
       }
-    }
+    },
+    "owner": "nork"
   }
 }
