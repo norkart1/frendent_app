@@ -22,7 +22,8 @@ const About = () => {
             <Text style={styles.logoText}>=</Text>
           </View>
           <Text style={styles.appName}>Calculator</Text>
-          <Text style={styles.version}>Version 1.0.0</Text>
+          <Text style={styles.version}>Version 1.0.1</Text>
+          <Text style={styles.owner}>Developed by Muhammed Navas</Text>
         </View>
 
         <View style={styles.section}>
@@ -114,6 +115,12 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     fontSize: 16,
     marginTop: 5,
+  },
+  owner: {
+    color: '#38BDF8',
+    fontSize: 14,
+    marginTop: 8,
+    fontWeight: '500',
   },
   section: {
     width: '100%',
