@@ -1,38 +1,38 @@
 {
   "expo": {
-    "name": "Calculator",
-    "slug": "calculator",
+    "name": "Dikhr and Dua",
+    "slug": "dikhr-and-dua",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "calculator",
+    "icon": "./assets/images/logo.png",
+    "scheme": "dikhr-and-dua",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nork.calculator"
+      "bundleIdentifier": "com.nork.dikhr-and-dua"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#071624"
       },
-      "package": "com.nork.calculator",
+      "package": "com.nork.dikhr.and.dua",
       "permissions": [],
       "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/logo.png",
+          "imageWidth": 250,
           "resizeMode": "contain",
           "backgroundColor": "#071624"
         }
