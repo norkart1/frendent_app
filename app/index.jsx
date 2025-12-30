@@ -84,6 +84,7 @@ export default function Index() {
     { name: "Tasbih", icon: "circle-multiple" },
     { name: "Qibla Compass", icon: "compass" },
     { name: "Siyam Timing", icon: "moon-waning-crescent" },
+    { name: "Calculator", icon: "calculator-variant" },
     { name: "Dua for everyday", icon: "hands-pray" },
     { name: "Hajj & Umrah", icon: "kaaba", useFA5: true },
   ];
@@ -138,7 +139,10 @@ export default function Index() {
               <TouchableOpacity 
                 key={index} 
                 style={styles.featureItem}
-                onPress={() => feature.name === "Siyam Timing" && router.push('/prayer-timing')}
+                onPress={() => {
+                  if (feature.name === "Siyam Timing") router.push('/prayer-timing');
+                  if (feature.name === "Calculator") router.push('/calculator');
+                }}
               >
                 <View style={styles.featureIconBox}>
                   {feature.useFA5 ? (
