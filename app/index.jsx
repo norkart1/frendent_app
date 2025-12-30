@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert, Modal, ActivityIndicator } from 'react-native';
 import * as Updates from 'expo-updates';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ const Calculator = () => {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('0');
   const [isCalculated, setIsCalculated] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     async function onFetchUpdateAsync() {
@@ -29,15 +30,20 @@ const Calculator = () => {
               {
                 text: 'Update',
                 onPress: async () => {
-                  await Updates.fetchUpdateAsync();
-                  await Updates.reloadAsync();
+                  try {
+                    setIsUpdating(true);
+                    await Updates.fetchUpdateAsync();
+                    await Updates.reloadAsync();
+                  } catch (e) {
+                    setIsUpdating(false);
+                    Alert.alert('Update Failed', 'Could not download the update. Please try again later.');
+                  }
                 },
               },
             ]
           );
         }
       } catch (error) {
-        // You can also add an error handler here
         console.log(`Error fetching latest Expo update: ${error}`);
       }
     }
@@ -107,7 +113,6 @@ const Calculator = () => {
         const nextExpr = currentExpr + value;
         setExpression(nextExpr);
         
-        // Dynamic update of result as user types
         try {
           if (nextExpr && !operators.includes(value)) {
              const san = nextExpr
@@ -154,6 +159,17 @@ const Calculator = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
+      
+      <Modal transparent visible={isUpdating} animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.updateCard}>
+            <ActivityIndicator size="large" color="#3DD8C4" />
+            <Text style={styles.updateTitle}>Updating App</Text>
+            <Text style={styles.updateText}>Downloading the latest features...</Text>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.burgerButton} 
@@ -212,6 +228,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#071624',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(7, 22, 36, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  updateCard: {
+    padding: 30,
+    borderRadius: 20,
+    alignItems: 'center',
+    width: '80%',
+  },
+  updateTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  updateText: {
+    color: '#94A3B8',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',
