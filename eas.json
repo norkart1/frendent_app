@@ -1,16 +1,24 @@
 {
   "cli": {
-    "version": ">= 5.0.0"
+    "version": ">= 5.0.0",
+    "requireCommit": true,
+    "appVersionSource": "remote"
   },
   "build": {
     "preview": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "NPM_FLAGS": "--legacy-peer-deps"
       }
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "NPM_FLAGS": "--legacy-peer-deps"
       }
     }
   },
