@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-// Calculate button size based on screen width to ensure it fits mobile screens
+const { width } = Dimensions.get('window');
+// Match the exact padding and layout from the image
+const KEYPAD_PADDING = 20;
 const BUTTON_GAP = 12;
-const BUTTON_WIDTH = (width - (5 * BUTTON_GAP)) / 4;
+const BUTTON_WIDTH = (width - (KEYPAD_PADDING * 2) - (3 * BUTTON_GAP)) / 4;
 
 const Calculator = () => {
   const [expression, setExpression] = useState('');
@@ -14,6 +15,7 @@ const Calculator = () => {
     if (value === '=') {
       try {
         if (!expression) return;
+        // Basic calculation logic
         const evalResult = eval(expression.replace(/x/g, '*').replace(/÷/g, '/'));
         setResult(evalResult.toLocaleString());
       } catch (error) {
@@ -43,7 +45,6 @@ const Calculator = () => {
       buttonStyle.push(styles.operatorButton);
       textStyle.push(styles.operatorText);
     } else if (type === 'clear') {
-      textStyle.push(styles.clearButton);
       textStyle.push(styles.clearText);
     } else if (type === 'equal') {
       buttonStyle.push(styles.equalButton);
@@ -69,8 +70,8 @@ const Calculator = () => {
       </View>
 
       <View style={styles.displayContainer}>
-        <Text style={styles.expression} numberOfLines={1} adjustsFontSizeToFit>{expression}</Text>
-        <Text style={styles.result} numberOfLines={1} adjustsFontSizeToFit>{result}</Text>
+        <Text style={styles.expression}>{expression}</Text>
+        <Text style={styles.result}>{result}</Text>
       </View>
 
       <View style={styles.keypad}>
@@ -112,44 +113,44 @@ const Calculator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A1A2F',
+    backgroundColor: '#071624', // Exact background from image
   },
   header: {
     alignItems: 'center',
     paddingTop: Platform.OS === 'ios' ? 0 : 20,
-    paddingBottom: 10,
+    marginBottom: 40,
   },
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '500',
+    opacity: 0.9,
   },
   displayContainer: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    paddingHorizontal: 25,
-    paddingBottom: 25,
+    paddingHorizontal: 30,
+    paddingBottom: 40,
   },
   expression: {
-    color: '#64748B',
-    fontSize: 24,
-    marginBottom: 5,
+    color: '#94A3B8',
+    fontSize: 22,
+    marginBottom: 8,
     textAlign: 'right',
   },
   result: {
     color: '#FFFFFF',
-    fontSize: 64,
-    fontWeight: '600',
+    fontSize: 52,
+    fontWeight: '500',
     textAlign: 'right',
   },
   keypad: {
-    backgroundColor: '#0D2137',
-    borderTopLeftRadius: 35,
-    borderTopRightRadius: 35,
-    padding: BUTTON_GAP,
+    paddingHorizontal: KEYPAD_PADDING,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 20,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.05)',
     paddingTop: 30,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 25,
   },
   row: {
     flexDirection: 'row',
@@ -159,35 +160,33 @@ const styles = StyleSheet.create({
   button: {
     width: BUTTON_WIDTH,
     height: BUTTON_WIDTH,
-    borderRadius: 22,
-    backgroundColor: '#162A43',
+    borderRadius: 24, // Exact rounded style from image
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '500',
+    fontSize: 24,
+    fontWeight: '400',
   },
   operatorButton: {
-    backgroundColor: '#1E3A5F',
+    // Standard operators are transparent in the image style
   },
   operatorText: {
-    color: '#38BDF8',
-  },
-  clearButton: {
-    // Keep standard button background for consistency with screenshot
+    color: '#38BDF8', // Cyan/Blue for operators
   },
   clearText: {
-    color: '#EF4444',
+    color: '#F87171', // Redish for C
   },
   equalButton: {
-    backgroundColor: '#2DD4BF',
+    backgroundColor: '#3DD8C4', // Specific green/teal for = button
+    borderRadius: 24,
   },
   equalText: {
-    color: '#0A1A2F',
-    fontSize: 34,
-    fontWeight: '700',
+    color: '#071624',
+    fontSize: 32,
+    fontWeight: '600',
   },
 });
 
