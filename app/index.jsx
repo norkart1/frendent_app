@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
-// Calculate spacing carefully
 const KEYPAD_PADDING = 20;
 const BUTTON_GAP = 12;
 const BUTTON_WIDTH = (width - (KEYPAD_PADDING * 2) - (3 * BUTTON_GAP)) / 4;
@@ -10,29 +9,28 @@ const BUTTON_WIDTH = (width - (KEYPAD_PADDING * 2) - (3 * BUTTON_GAP)) / 4;
 const Calculator = () => {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('0');
+  const [isCalculated, setIsCalculated] = useState(false);
 
   const handlePress = (value) => {
     if (value === '=') {
       try {
         if (!expression) return;
-        // Sanitizing expression for safer eval
         const sanitized = expression
           .replace(/x/g, '*')
           .replace(/÷/g, '/')
           .replace(/%/g, '/100');
         
-        // Use Function instead of eval for slightly better safety/scoping
         const evalResult = new Function(`return ${sanitized}`)();
         
         if (isNaN(evalResult) || !isFinite(evalResult)) {
           setResult('Error');
         } else {
-          // Format result with commas and reasonable decimal places
           const formattedResult = Number(evalResult.toFixed(8)).toLocaleString('en-US', {
             maximumFractionDigits: 8,
             useGrouping: true
           });
           setResult(formattedResult);
+          setIsCalculated(true);
         }
       } catch (error) {
         setResult('Error');
@@ -40,22 +38,55 @@ const Calculator = () => {
     } else if (value === 'C') {
       setExpression('');
       setResult('0');
+      setIsCalculated(false);
     } else if (value === '()') {
       const openCount = (expression.match(/\(/g) || []).length;
       const closeCount = (expression.match(/\)/g) || []).length;
-      // Smarter parenthesis logic
-      if (openCount > closeCount && !isNaN(expression.slice(-1)) && expression.slice(-1) !== '') {
-        setExpression(expression + ')');
+      let newExpr = expression;
+      if (isCalculated) {
+        newExpr = result.replace(/,/g, '');
+        setIsCalculated(false);
+      }
+      if (openCount > closeCount && !isNaN(newExpr.slice(-1)) && newExpr.slice(-1) !== '') {
+        setExpression(newExpr + ')');
       } else {
-        setExpression(expression + '(');
+        setExpression(newExpr + '(');
       }
     } else {
-      // Prevent multiple operators in a row
       const operators = ['+', '-', 'x', '÷', '%'];
-      if (operators.includes(value) && operators.includes(expression.slice(-1))) {
-        setExpression(expression.slice(0, -1) + value);
+      let currentExpr = expression;
+      
+      if (isCalculated) {
+        if (operators.includes(value)) {
+          currentExpr = result.replace(/,/g, '');
+        } else {
+          currentExpr = '';
+        }
+        setIsCalculated(false);
+      }
+
+      if (operators.includes(value) && operators.includes(currentExpr.slice(-1))) {
+        setExpression(currentExpr.slice(0, -1) + value);
       } else {
-        setExpression(expression + value);
+        const nextExpr = currentExpr + value;
+        setExpression(nextExpr);
+        
+        // Dynamic update of result as user types
+        try {
+          if (nextExpr && !operators.includes(value)) {
+             const san = nextExpr
+              .replace(/x/g, '*')
+              .replace(/÷/g, '/')
+              .replace(/%/g, '/100');
+             const res = new Function(`return ${san}`)();
+             if (!isNaN(res) && isFinite(res)) {
+               setResult(Number(res.toFixed(8)).toLocaleString('en-US', {
+                 maximumFractionDigits: 8,
+                 useGrouping: true
+               }));
+             }
+          }
+        } catch(e) {}
       }
     }
   };
@@ -94,7 +125,7 @@ const Calculator = () => {
       <View style={styles.displayArea}>
         <View style={styles.displayContent}>
           <Text style={styles.expressionText} numberOfLines={1}>{expression}</Text>
-          <Text style={styles.resultText} numberOfLines={1}>{result}</Text>
+          <Text style={styles.resultText} numberOfLines={1} adjustsFontSizeToFit>{result}</Text>
         </View>
       </View>
 
@@ -161,17 +192,16 @@ const styles = StyleSheet.create({
   },
   expressionText: {
     color: '#94A3B8',
-    fontSize: 24,
-    marginBottom: 10,
+    fontSize: 28,
+    marginBottom: 5,
     textAlign: 'right',
   },
   resultText: {
     color: '#FFFFFF',
-    fontSize: 64,
+    fontSize: 84,
     fontWeight: '500',
     textAlign: 'right',
     includeFontPadding: false,
-    lineHeight: 74,
   },
   keypad: {
     paddingHorizontal: KEYPAD_PADDING,
@@ -193,7 +223,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '400',
   },
   operatorText: {
