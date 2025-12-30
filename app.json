@@ -7,7 +7,7 @@
     "icon": "./assets/images/logo.png",
     "scheme": "dikhr-and-dua",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nork.dikhr-and-dua"
