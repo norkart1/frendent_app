@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
+const BUTTON_WIDTH = (width - 60) / 4;
 
 const Calculator = () => {
   const [expression, setExpression] = useState('');
@@ -20,7 +22,7 @@ const Calculator = () => {
     } else if (value === '()') {
       const openCount = (expression.match(/\(/g) || []).length;
       const closeCount = (expression.match(/\)/g) || []).length;
-      if (openCount > closeCount && !isNaN(expression.slice(-1))) {
+      if (openCount > closeCount && !isNaN(expression.slice(-1)) && expression.slice(-1) !== '') {
         setExpression(expression + ')');
       } else {
         setExpression(expression + '(');
@@ -30,23 +32,29 @@ const Calculator = () => {
     }
   };
 
-  const renderButton = (label, isOperator = false, isClear = false) => (
-    <TouchableOpacity 
-      style={[
-        styles.button, 
-        isOperator && styles.operatorButton,
-        label === '=' && styles.equalButton
-      ]} 
-      onPress={() => handlePress(label)}
-    >
-      <Text style={[
-        styles.buttonText, 
-        isOperator && styles.operatorText,
-        isClear && styles.clearText,
-        label === '=' && styles.equalText
-      ]}>{label}</Text>
-    </TouchableOpacity>
-  );
+  const renderButton = (label, type = 'number') => {
+    let buttonStyle = [styles.button];
+    let textStyle = [styles.buttonText];
+
+    if (type === 'operator') {
+      buttonStyle.push(styles.operatorButton);
+      textStyle.push(styles.operatorText);
+    } else if (type === 'clear') {
+      textStyle.push(styles.clearText);
+    } else if (type === 'equal') {
+      buttonStyle.push(styles.equalButton);
+      textStyle.push(styles.equalText);
+    }
+
+    return (
+      <TouchableOpacity 
+        style={buttonStyle} 
+        onPress={() => handlePress(label)}
+      >
+        <Text style={textStyle}>{label}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,34 +70,34 @@ const Calculator = () => {
 
       <View style={styles.keypad}>
         <View style={styles.row}>
-          {renderButton('C', false, true)}
-          {renderButton('()', true)}
-          {renderButton('%', true)}
-          {renderButton('÷', true)}
+          {renderButton('C', 'clear')}
+          {renderButton('()', 'operator')}
+          {renderButton('%', 'operator')}
+          {renderButton('÷', 'operator')}
         </View>
         <View style={styles.row}>
           {renderButton('1')}
           {renderButton('2')}
           {renderButton('3')}
-          {renderButton('x', true)}
+          {renderButton('x', 'operator')}
         </View>
         <View style={styles.row}>
           {renderButton('4')}
           {renderButton('5')}
           {renderButton('6')}
-          {renderButton('+', true)}
+          {renderButton('+', 'operator')}
         </View>
         <View style={styles.row}>
           {renderButton('7')}
           {renderButton('8')}
           {renderButton('9')}
-          {renderButton('-', true)}
+          {renderButton('-', 'operator')}
         </View>
         <View style={styles.row}>
           {renderButton('.')}
           {renderButton('0')}
           {renderButton('000')}
-          {renderButton('=')}
+          {renderButton('=', 'equal')}
         </View>
       </View>
     </SafeAreaView>
@@ -100,48 +108,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0A1A2F',
-    padding: 20,
   },
   header: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 40,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
   },
   displayContainer: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    marginBottom: 40,
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
+    paddingBottom: 30,
   },
   expression: {
     color: '#64748B',
-    fontSize: 24,
-    marginBottom: 8,
+    fontSize: 22,
+    marginBottom: 10,
   },
   result: {
     color: '#FFFFFF',
-    fontSize: 64,
-    fontWeight: '700',
+    fontSize: 56,
+    fontWeight: '600',
   },
   keypad: {
-    flex: 2,
-    justifyContent: 'flex-end',
-    paddingBottom: 20,
+    backgroundColor: '#0D2137',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 20,
+    paddingTop: 30,
+    paddingBottom: 40,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 15,
   },
   button: {
-    width: 75,
-    height: 75,
+    width: BUTTON_WIDTH,
+    height: BUTTON_WIDTH,
     borderRadius: 20,
     backgroundColor: '#162A43',
     justifyContent: 'center',
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '500',
   },
   operatorButton: {
@@ -166,7 +176,7 @@ const styles = StyleSheet.create({
   },
   equalText: {
     color: '#0A1A2F',
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: '700',
   },
 });
