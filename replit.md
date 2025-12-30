@@ -63,71 +63,59 @@ npm update                         # Update all packages
 
 ## Deployment Options
 
-### 1. Web Publishing (Easiest - via Replit)
-- App is already running on port 5000
-- Click **"Publish"** in Replit to get a public URL
-- Use custom domain if desired
+### ✅ 1. WEB PUBLISHING (Recommended - Fastest)
+**Status:** Ready to deploy now!
 
-### 2. Web Build & Export
 ```bash
-# Create optimized static build
-npm run web -- --prod
+npm run web    # Already running on port 5000
+```
 
-# Export static files for hosting
+**Deploy:**
+- Click **"Publish"** button in Replit GUI
+- Get instant public URL
+- Uses custom domain if configured
+
+**Alternative - Export Static Files:**
+```bash
 npx expo export --platform web
 ```
 
-### 3. Mobile Build (EAS - Expo Application Services)
+### 2. Mobile Apps (iOS/Android via EAS)
 
-**Setup (One time):**
+**Prerequisites:**
 ```bash
 npm install -g eas-cli
-eas login                    # Login with Expo account
-eas init                     # Initialize project (if not already done)
+eas login                # Login to your Expo account
+eas init                 # One-time setup
 ```
 
-**Build for iOS:**
+**Build Commands:**
 ```bash
+# Android
+eas build --platform android --profile preview
+
+# iOS  
 eas build --platform ios
-# OR without interaction:
-eas build --platform ios --non-interactive
-```
 
-**Build for Android:**
-```bash
-eas build --platform android
-# OR without interaction:
-eas build --platform android --non-interactive
-```
-
-**Build for Both Platforms:**
-```bash
+# Both
 eas build --platform all
 ```
 
-**Build and Submit to App Store:**
+**Note:** If EAS build fails due to environment issues, local build or web deployment is recommended.
+
+**Publish to App Stores:**
 ```bash
-eas build --platform ios --submit
+# Apple App Store
+eas build --platform ios --profile production --submit
+
+# Google Play
+eas build --platform android --profile production --submit
 ```
 
-**Build and Submit to Google Play:**
-```bash
-eas build --platform android --submit
-```
-
-### 4. Direct APK Build (Android Only)
-```bash
-eas build --platform android --non-interactive
-# Download from: https://expo.dev/accounts/nork/projects/dikhr-and-dua/builds
-```
-
-### 5. Push Updates (without rebuilding app)
-After app is built, push code changes:
+### 3. Push Updates (Code Changes Only)
+After initial mobile app build:
 ```bash
 eas update --platform ios,android
-# OR for specific platform:
-eas update --platform ios
-eas update --platform android
 ```
 
 ## Project Structure
