@@ -49,6 +49,14 @@
         "projectId": "c1dd7ac2-3e7c-443e-a40a-b724d107cd65"
       }
     },
-    "owner": "nork"
+    "owner": "nork",
+    "updates": {
+      "url": "https://u.expo.dev/c1dd7ac2-3e7c-443e-a40a-b724d107cd65",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_APP_RESUME"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }

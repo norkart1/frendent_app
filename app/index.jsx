@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert } from 'react-native';
+import * as Updates from 'expo-updates';
 
 const { width } = Dimensions.get('window');
 const KEYPAD_PADDING = 20;
@@ -10,6 +11,38 @@ const Calculator = () => {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('0');
   const [isCalculated, setIsCalculated] = useState(false);
+
+  useEffect(() => {
+    async function onFetchUpdateAsync() {
+      try {
+        const update = await Updates.checkForUpdateAsync();
+
+        if (update.isAvailable) {
+          Alert.alert(
+            'Update Available',
+            'A new version of the app is available. Would you like to update now?',
+            [
+              { text: 'Later', style: 'cancel' },
+              {
+                text: 'Update',
+                onPress: async () => {
+                  await Updates.fetchUpdateAsync();
+                  await Updates.reloadAsync();
+                },
+              },
+            ]
+          );
+        }
+      } catch (error) {
+        // You can also add an error handler here
+        console.log(`Error fetching latest Expo update: ${error}`);
+      }
+    }
+
+    if (!__DEV__) {
+      onFetchUpdateAsync();
+    }
+  }, []);
 
   const handlePress = (value) => {
     if (value === '=') {
