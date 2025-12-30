@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
-// Match the exact padding and layout from the image
+// Calculate spacing carefully
 const KEYPAD_PADDING = 20;
 const BUTTON_GAP = 12;
 const BUTTON_WIDTH = (width - (KEYPAD_PADDING * 2) - (3 * BUTTON_GAP)) / 4;
@@ -15,9 +15,25 @@ const Calculator = () => {
     if (value === '=') {
       try {
         if (!expression) return;
-        // Basic calculation logic
-        const evalResult = eval(expression.replace(/x/g, '*').replace(/÷/g, '/'));
-        setResult(evalResult.toLocaleString());
+        // Sanitizing expression for safer eval
+        const sanitized = expression
+          .replace(/x/g, '*')
+          .replace(/÷/g, '/')
+          .replace(/%/g, '/100');
+        
+        // Use Function instead of eval for slightly better safety/scoping
+        const evalResult = new Function(`return ${sanitized}`)();
+        
+        if (isNaN(evalResult) || !isFinite(evalResult)) {
+          setResult('Error');
+        } else {
+          // Format result with commas and reasonable decimal places
+          const formattedResult = Number(evalResult.toFixed(8)).toLocaleString('en-US', {
+            maximumFractionDigits: 8,
+            useGrouping: true
+          });
+          setResult(formattedResult);
+        }
       } catch (error) {
         setResult('Error');
       }
@@ -27,13 +43,20 @@ const Calculator = () => {
     } else if (value === '()') {
       const openCount = (expression.match(/\(/g) || []).length;
       const closeCount = (expression.match(/\)/g) || []).length;
+      // Smarter parenthesis logic
       if (openCount > closeCount && !isNaN(expression.slice(-1)) && expression.slice(-1) !== '') {
         setExpression(expression + ')');
       } else {
         setExpression(expression + '(');
       }
     } else {
-      setExpression(expression + value);
+      // Prevent multiple operators in a row
+      const operators = ['+', '-', 'x', '÷', '%'];
+      if (operators.includes(value) && operators.includes(expression.slice(-1))) {
+        setExpression(expression.slice(0, -1) + value);
+      } else {
+        setExpression(expression + value);
+      }
     }
   };
 
@@ -42,7 +65,6 @@ const Calculator = () => {
     let textStyle = [styles.buttonText];
 
     if (type === 'operator') {
-      buttonStyle.push(styles.operatorButton);
       textStyle.push(styles.operatorText);
     } else if (type === 'clear') {
       textStyle.push(styles.clearText);
@@ -69,9 +91,11 @@ const Calculator = () => {
         <Text style={styles.headerTitle}>Calculator</Text>
       </View>
 
-      <View style={styles.displayContainer}>
-        <Text style={styles.expression}>{expression}</Text>
-        <Text style={styles.result}>{result}</Text>
+      <View style={styles.displayArea}>
+        <View style={styles.displayContent}>
+          <Text style={styles.expressionText} numberOfLines={1}>{expression}</Text>
+          <Text style={styles.resultText} numberOfLines={1}>{result}</Text>
+        </View>
       </View>
 
       <View style={styles.keypad}>
@@ -113,44 +137,46 @@ const Calculator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#071624', // Exact background from image
+    backgroundColor: '#071624',
   },
   header: {
     alignItems: 'center',
-    paddingTop: Platform.OS === 'ios' ? 0 : 20,
-    marginBottom: 40,
+    paddingVertical: 15,
   },
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '500',
-    opacity: 0.9,
+    letterSpacing: 0.5,
   },
-  displayContainer: {
+  displayArea: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
     paddingHorizontal: 30,
-    paddingBottom: 40,
+    paddingBottom: 20,
   },
-  expression: {
+  displayContent: {
+    alignItems: 'flex-end',
+    width: '100%',
+  },
+  expressionText: {
     color: '#94A3B8',
-    fontSize: 22,
-    marginBottom: 8,
+    fontSize: 24,
+    marginBottom: 10,
     textAlign: 'right',
   },
-  result: {
+  resultText: {
     color: '#FFFFFF',
-    fontSize: 52,
+    fontSize: 64,
     fontWeight: '500',
     textAlign: 'right',
+    includeFontPadding: false,
+    lineHeight: 74,
   },
   keypad: {
     paddingHorizontal: KEYPAD_PADDING,
-    paddingBottom: Platform.OS === 'ios' ? 30 : 20,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.05)',
-    paddingTop: 30,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 30,
+    paddingTop: 10,
   },
   row: {
     flexDirection: 'row',
@@ -160,32 +186,29 @@ const styles = StyleSheet.create({
   button: {
     width: BUTTON_WIDTH,
     height: BUTTON_WIDTH,
-    borderRadius: 24, // Exact rounded style from image
+    borderRadius: 24,
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '400',
   },
-  operatorButton: {
-    // Standard operators are transparent in the image style
-  },
   operatorText: {
-    color: '#38BDF8', // Cyan/Blue for operators
+    color: '#38BDF8',
   },
   clearText: {
-    color: '#F87171', // Redish for C
+    color: '#F87171',
   },
   equalButton: {
-    backgroundColor: '#3DD8C4', // Specific green/teal for = button
+    backgroundColor: '#3DD8C4',
     borderRadius: 24,
   },
   equalText: {
     color: '#071624',
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '600',
   },
 });
