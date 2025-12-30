@@ -53,7 +53,7 @@
     "updates": {
       "url": "https://u.expo.dev/c1dd7ac2-3e7c-443e-a40a-b724d107cd65",
       "fallbackToCacheTimeout": 0,
-      "checkAutomatically": "ON_APP_RESUME"
+      "checkAutomatically": "onResume"
     },
     "runtimeVersion": {
       "policy": "appVersion"
