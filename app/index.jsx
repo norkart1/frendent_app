@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform, Alert } from 'react-native';
 import * as Updates from 'expo-updates';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 const KEYPAD_PADDING = 20;
@@ -8,6 +10,7 @@ const BUTTON_GAP = 12;
 const BUTTON_WIDTH = (width - (KEYPAD_PADDING * 2) - (3 * BUTTON_GAP)) / 4;
 
 const Calculator = () => {
+  const router = useRouter();
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('0');
   const [isCalculated, setIsCalculated] = useState(false);
@@ -152,7 +155,14 @@ const Calculator = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.burgerButton} 
+          onPress={() => router.push('/about')}
+        >
+          <Ionicons name="menu" size={28} color="#FFFFFF" />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Calculator</Text>
+        <View style={styles.headerPlaceholder} />
       </View>
 
       <View style={styles.displayArea}>
@@ -204,14 +214,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#071624',
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
     paddingVertical: 15,
+  },
+  burgerButton: {
+    padding: 5,
   },
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
     letterSpacing: 0.5,
+  },
+  headerPlaceholder: {
+    width: 38,
   },
   displayArea: {
     flex: 1,
