@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Dikhr and Dua",
-    "slug": "dikhr-and-dua",
+    "name": "Calculator",
+    "slug": "calculator",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "dikhr-and-dua",
+    "scheme": "calculator",
     "userInterfaceStyle": "dark",
     "newArchEnabled": false,
     "ios": {
