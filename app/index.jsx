@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, StyleSheet, Dimensions, Platform } from 'react-native';
 
-const { width } = Dimensions.get('window');
-const BUTTON_WIDTH = (width - 60) / 4;
+const { width, height } = Dimensions.get('window');
+// Calculate button size based on screen width to ensure it fits mobile screens
+const BUTTON_GAP = 12;
+const BUTTON_WIDTH = (width - (5 * BUTTON_GAP)) / 4;
 
 const Calculator = () => {
   const [expression, setExpression] = useState('');
@@ -11,7 +13,8 @@ const Calculator = () => {
   const handlePress = (value) => {
     if (value === '=') {
       try {
-        const evalResult = eval(expression.replace('x', '*').replace('÷', '/'));
+        if (!expression) return;
+        const evalResult = eval(expression.replace(/x/g, '*').replace(/÷/g, '/'));
         setResult(evalResult.toLocaleString());
       } catch (error) {
         setResult('Error');
@@ -40,6 +43,7 @@ const Calculator = () => {
       buttonStyle.push(styles.operatorButton);
       textStyle.push(styles.operatorText);
     } else if (type === 'clear') {
+      textStyle.push(styles.clearButton);
       textStyle.push(styles.clearText);
     } else if (type === 'equal') {
       buttonStyle.push(styles.equalButton);
@@ -50,6 +54,7 @@ const Calculator = () => {
       <TouchableOpacity 
         style={buttonStyle} 
         onPress={() => handlePress(label)}
+        activeOpacity={0.7}
       >
         <Text style={textStyle}>{label}</Text>
       </TouchableOpacity>
@@ -64,8 +69,8 @@ const Calculator = () => {
       </View>
 
       <View style={styles.displayContainer}>
-        <Text style={styles.expression}>{expression || '0'}</Text>
-        <Text style={styles.result}>{result}</Text>
+        <Text style={styles.expression} numberOfLines={1} adjustsFontSizeToFit>{expression}</Text>
+        <Text style={styles.result} numberOfLines={1} adjustsFontSizeToFit>{result}</Text>
       </View>
 
       <View style={styles.keypad}>
@@ -111,8 +116,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingTop: Platform.OS === 'ios' ? 0 : 20,
+    paddingBottom: 10,
   },
   headerTitle: {
     color: '#FFFFFF',
@@ -123,43 +128,45 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    paddingHorizontal: 30,
-    paddingBottom: 30,
+    paddingHorizontal: 25,
+    paddingBottom: 25,
   },
   expression: {
     color: '#64748B',
-    fontSize: 22,
-    marginBottom: 10,
+    fontSize: 24,
+    marginBottom: 5,
+    textAlign: 'right',
   },
   result: {
     color: '#FFFFFF',
-    fontSize: 56,
+    fontSize: 64,
     fontWeight: '600',
+    textAlign: 'right',
   },
   keypad: {
     backgroundColor: '#0D2137',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    padding: 20,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    padding: BUTTON_GAP,
     paddingTop: 30,
-    paddingBottom: 40,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 25,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: BUTTON_GAP,
   },
   button: {
     width: BUTTON_WIDTH,
     height: BUTTON_WIDTH,
-    borderRadius: 20,
+    borderRadius: 22,
     backgroundColor: '#162A43',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '500',
   },
   operatorButton: {
@@ -167,6 +174,9 @@ const styles = StyleSheet.create({
   },
   operatorText: {
     color: '#38BDF8',
+  },
+  clearButton: {
+    // Keep standard button background for consistency with screenshot
   },
   clearText: {
     color: '#EF4444',
@@ -176,7 +186,7 @@ const styles = StyleSheet.create({
   },
   equalText: {
     color: '#0A1A2F',
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '700',
   },
 });
