@@ -45,9 +45,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "nork-dikhr-dua"
       }
     },
     "owner": "nork"
