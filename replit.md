@@ -43,6 +43,12 @@ npm run android      # Build for Android
 npm run ios          # Build for iOS
 ```
 
+### Production Build
+```bash
+npm run web -- --prod              # Build optimized web version
+npm run build                       # Create production bundle (if available)
+```
+
 ### Testing & Quality
 ```bash
 npm test             # Run Jest tests
@@ -59,33 +65,69 @@ npm update                         # Update all packages
 
 ### 1. Web Publishing (Easiest - via Replit)
 - App is already running on port 5000
-- Click "Publish" in Replit to get a public URL
+- Click **"Publish"** in Replit to get a public URL
 - Use custom domain if desired
 
-### 2. Mobile Build (EAS - Expo Application Services)
+### 2. Web Build & Export
+```bash
+# Create optimized static build
+npm run web -- --prod
 
-**Prerequisites:**
-- Expo account (free at expo.dev)
-- Expo CLI: `npm install -g eas-cli`
+# Export static files for hosting
+npx expo export --platform web
+```
+
+### 3. Mobile Build (EAS - Expo Application Services)
+
+**Setup (One time):**
+```bash
+npm install -g eas-cli
+eas login                    # Login with Expo account
+eas init                     # Initialize project (if not already done)
+```
 
 **Build for iOS:**
 ```bash
 eas build --platform ios
+# OR without interaction:
+eas build --platform ios --non-interactive
 ```
 
 **Build for Android:**
 ```bash
 eas build --platform android
+# OR without interaction:
+eas build --platform android --non-interactive
 ```
 
-**Build for Both:**
+**Build for Both Platforms:**
 ```bash
 eas build --platform all
 ```
 
-### 3. Standalone APK (Android Only)
+**Build and Submit to App Store:**
+```bash
+eas build --platform ios --submit
+```
+
+**Build and Submit to Google Play:**
+```bash
+eas build --platform android --submit
+```
+
+### 4. Direct APK Build (Android Only)
 ```bash
 eas build --platform android --non-interactive
+# Download from: https://expo.dev/accounts/nork/projects/dikhr-and-dua/builds
+```
+
+### 5. Push Updates (without rebuilding app)
+After app is built, push code changes:
+```bash
+eas update --platform ios,android
+# OR for specific platform:
+eas update --platform ios
+eas update --platform android
 ```
 
 ## Project Structure
